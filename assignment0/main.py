@@ -24,21 +24,21 @@ def main(url):
     # Print incident counts
     status(db)
 
-
+# make sure the to remove the SSL
 def fetchincidents(url):
     ssl_context = ssl.create_default_context()
     ssl_context.check_hostname = False
     ssl_context.verify_mode = ssl.CERT_NONE
     try:
         incident_data = urllib.request.urlopen(url, context=ssl_context)
-        path = "downloaded_file.pdf"
+        path = "docs/downloaded_file.pdf"
         with open(path, 'wb') as local_file:
             local_file.write(incident_data.read())
     except Exception as e:
         print(f"An error occurred: {e}")
 
 def extractincidents():
-    reader = PdfReader("downloaded_file.pdf")
+    reader = PdfReader("docs/downloaded_file.pdf")
     pages = reader.pages
     incidents = []
     for page in pages:
@@ -71,7 +71,7 @@ def populatedb(db, incident_data):
 
 def status(db):
     cursor = db.cursor()
-    cursor.execute("SELECT nature, COUNT(*) as occurrence FROM incidents GROUP BY nature ORDER BY occurrence DESC")
+    cursor.execute("SELECT nature, COUNT(*) as occurrence FROM incidents GROUP BY nature ORDER BY occurrence DESC, nature")
 
     results = cursor.fetchall()
     for nature, occurrence in results:
