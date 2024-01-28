@@ -3,6 +3,7 @@ import urllib.request
 import ssl
 import sqlite3
 import re
+import os
 
 from pypdf import PdfReader
 
@@ -31,7 +32,10 @@ def fetchincidents(url):
     ssl_context.verify_mode = ssl.CERT_NONE
     try:
         incident_data = urllib.request.urlopen(url, context=ssl_context)
-        path = "docs/downloaded_file.pdf"
+        docs_dir = 'docs'
+        if not os.path.exists(docs_dir):
+            os.makedirs(docs_dir)
+        path = os.path.join(docs_dir, "downloaded_file.pdf")
         with open(path, 'wb') as local_file:
             local_file.write(incident_data.read())
     except Exception as e:
@@ -54,7 +58,10 @@ def extractincidents():
 
 def createdb():
     try:
-        con = sqlite3.connect("resources/normanpd.db")
+        resources_dir = 'resources'
+        if not os.path.exists(resources_dir):
+            os.makedirs(resources_dir)
+        con = sqlite3.connect(os.path.join(resources_dir, "normanpd.db"))
         return con
     except Exception as e:
         print("Exception Occurred while connecting to SQLLite ", e)
@@ -62,8 +69,7 @@ def createdb():
 
 def populatedb(db, incident_data):
     cur = db.cursor()
-    db.execute(
-        "CREATE TABLE incidents (incident_time TEXT, incident_number TEXT, incident_location TEXT, nature TEXT, incident_ori TEXT);")
+    db.execute("CREATE TABLE incidents (incident_time TEXT, incident_number TEXT, incident_location TEXT, nature TEXT, incident_ori TEXT);")
     cur.executemany("INSERT INTO incidents VALUES(?, ?, ?, ?, ?)", incident_data)
     db.commit()
     return
