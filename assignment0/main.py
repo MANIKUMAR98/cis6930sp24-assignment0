@@ -9,7 +9,6 @@ from pypdf import PdfReader
 
 
 def main(url):
-
     # Download data
     fetchincidents(url)
 
@@ -25,13 +24,10 @@ def main(url):
     # Print incident counts
     status(db)
 
-# make sure the to remove the SSL
+
 def fetchincidents(url):
-    ssl_context = ssl.create_default_context()
-    ssl_context.check_hostname = False
-    ssl_context.verify_mode = ssl.CERT_NONE
     try:
-        incident_data = urllib.request.urlopen(url, context=ssl_context)
+        incident_data = urllib.request.urlopen(url)
         docs_dir = 'docs'
         if not os.path.exists(docs_dir):
             os.makedirs(docs_dir)
@@ -40,6 +36,7 @@ def fetchincidents(url):
             local_file.write(incident_data.read())
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 def extractincidents():
     reader = PdfReader("docs/downloaded_file.pdf")
@@ -50,11 +47,10 @@ def extractincidents():
         for line in data.splitlines():
             line = line.strip()
             if line and line.find("Incident Number") == -1:
-                res = re.split(r'\s{2,}', line)
+                res = re.split(r'\s{3,}', line)
                 if len(res) == 5:
                     incidents.append(tuple(res))
     return incidents
-
 
 def createdb():
     try:
@@ -78,7 +74,6 @@ def populatedb(db, incident_data):
 def status(db):
     cursor = db.cursor()
     cursor.execute("SELECT nature, COUNT(*) as occurrence FROM incidents GROUP BY nature ORDER BY occurrence DESC, nature")
-
     results = cursor.fetchall()
     for nature, occurrence in results:
         print(f"{nature}|{occurrence}")
