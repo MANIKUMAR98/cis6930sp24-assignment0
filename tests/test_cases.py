@@ -19,7 +19,7 @@ class TestFetchIncidents(unittest.TestCase):
         fetchincidents(url)
 
         # Assert
-        mock_urlopen.assert_called_once_with(url, context=unittest.mock.ANY)
+        mock_urlopen.assert_called_once_with(url)
         mock_open.assert_called_once_with('docs/downloaded_file.pdf', 'wb')
         mock_open().write.assert_called_once_with(b'Test PDF content')
 
