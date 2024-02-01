@@ -39,7 +39,6 @@ def check_and_remove_resource_folder():
 
 def fetchincidents(url):
     try:
-
         incident_data = urllib.request.urlopen(url)
         docs_dir = 'docs'
         if not os.path.exists(docs_dir):
@@ -59,16 +58,14 @@ def extractincidents(path):
         data = page.extract_text(extraction_mode="layout")
         for line in data.splitlines():
             line = line.strip()
-            if line and line.find("Incident Number") == -1:
+            if line and line.find("Incident Number") == -1 and line.find("NORMAN POLICE DEPARTMENT") == -1 and line.find("Daily Incident Summary") == -1:
                 res = re.split(r'\s{3,}', line)
-                if len(res) == 1 and len(incidents) > 0 and res[0].isupper() and res[0] != "NORMAN POLICE DEPARTMENT":
+                if len(res) == 1 and len(incidents) > 0 and res[0].isupper():
                     last_tuple = incidents[-1]
-                    if last_tuple:
-                        new_list = list(last_tuple)
-                        new_list[2] = new_list[2] + " " + res[0]
-                        incidents.pop()
-                        print("Special ", new_list)
-                        incidents.append(tuple(new_list))
+                    new_list = list(last_tuple)
+                    new_list[2] = new_list[2] + " " + res[0]
+                    incidents.pop()
+                    incidents.append(tuple(new_list))
                 if len(res) == 5:
                     incidents.append(tuple(res))
     return incidents
