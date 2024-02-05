@@ -143,9 +143,19 @@ def status(db):
     cursor.execute(
         "SELECT nature, COUNT(*) as occurrence FROM incidents GROUP BY nature ORDER BY occurrence DESC, nature;")
     results = cursor.fetchall()
-    sorted_list = sorted(results, key=lambda x: (x[1], x[0]), reverse=True)
-    for nature, occurrence in sorted_list:
+    is_empty = False
+    empty_count = 0
+    for nature, occurrence in results:
+        if len(nature) == 0:
+            empty_count = occurrence
+            is_empty = True
+            continue
+        if is_empty and empty_count > occurrence:
+            print(f"|{empty_count}")
+            is_empty = False
         print(f"{nature}|{occurrence}")
+    if is_empty:
+        print(f"|{empty_count}")
     db.close()
     return results
 
