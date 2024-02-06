@@ -6,15 +6,13 @@ The next phase involves printing a list of incident natures along with their res
 The resulting list will be sorted based on the total number of incidents, followed by alphabetical sorting of incident natures.
 
 ## How to install and run
-1. Install pyenv to manage Python versions using the command: **'curl https://pyenv.run | bash'**.
-2. Install a specific Python version with the command: **'pyenv install {PYTHON_VERSION}'**.
-3. Set the global Python version using: **'pyenv global {PYTHON_VERSION}'**.
-4. Install pipenv, a dependency manager, with the command: **'pip install pipenv'**.
-5. Install SQLite3 for database management using: **'sudo apt install sqlite3'**.
-6. Create a virtual environment with pipenv using: **'pipenv shell'**.
-7. Install all dependencies specified in the Pipfile by running: **'pipenv install'**. This command downloads all required dependencies.
-8. Run the application using: **'pipenv run python assignment0/main.py --incidents <url>'**. Replace <url> with the actual incidents URL.
-9. To execute test cases and verify functionality, use the command: **'pipenv run python -m pytest'**.
+1. Create a virtual environment with pipenv using: **'pipenv shell'**.
+2. Install all dependencies specified in the Pipfile by running: **'pipenv install'**. This command downloads all required dependencies.
+3. Run the application using: **'pipenv run python assignment0/main.py --incidents {URL}'**. Replace <url> with the actual incidents URL.
+4. To execute test cases and verify functionality, use the command: **'pipenv run python -m pytest'**.
+
+## Video 
+**[Video](https://drive.google.com/file/d/1ywBblwuHaP6bcoB-jQJiwSWJgMkbixCe/view?usp=sharing)**  - The demonstration video illustrates the steps for installing and running the application.
 
 ## Functions
 #### main.py
@@ -22,7 +20,7 @@ The resulting list will be sorted based on the total number of incidents, follow
 2. **'extractincidents(path)':** The extractincidents method utilizes the PyMuPDF library to parse PDF documents containing incident data. It iterates through each page, extracts text information, and groups the data into incidents. The resulting list of incident tuples includes relevant attributes, filtering out irrelevant information from the PDF.
 3. **'createdb()':** The 'createdb' method employs the sqlite3 library to create an SQLite database. It uses the os library to check for the existence of a 'resources' directory and creates one if not present. The SQLite database, named 'normanpd.db', is then established within the 'resources' directory. The method returns the connection to the created database. In the event of any exceptions during the connection process, an error message is printed.
 4. **'populatedb(db, incidents)':** The 'populatedb' method takes a database connection ('db') and incident data as parameters. It utilizes the connection to instantiate a cursor, which is then used to execute queries. Initially, the method creates a table named 'incidents' in the database with columns 'incident_time', 'incident_number', 'incident_location', 'nature', and 'incident_ori'. Subsequently, the provided incident data is stored in this table, and the changes are committed to the database.
-5. **'status(db)':**  The 'status' method accepts a database connection ('db') and executes an SQL query on the 'incidents' table. It calculates the occurrence count for each unique nature of incidents, orders the results in descending order by count and then alphabetically by nature. The method prints the nature and occurrence count in the format "nature|occurrence". After processing, it ensures the closure of the database connection for proper resource management 
+5. **'status(db)':**  The 'status' method accepts a database connection ('db') and executes an SQL query on the 'incidents' table. It calculates the occurrence count for each unique nature of incidents, orders the results in descending order by count and then alphabetically by nature. The method prints the nature and occurrence count in the format "{nature}|{occurrence}". After processing, it ensures the closure of the database connection for proper resource management 
 
 ## Database Development
 For effective management and analysis of incident data, the application relies on SQLite3 for database operations. Ensure that SQLite3 is installed on your system using the command sudo apt-get install sqlite3. The main code includes robust database development functionality, initializing with the creation of an SQLite database connection. This connection is established and configured within the 'resources' directory, ensuring proper isolation. Subsequently, the application creates the 'incidents' table within the database to structure the data. The populatedb function facilitates the insertion of incident information into this table, enabling efficient storage and retrieval. The status function retrieves and analyzes data from the 'incidents' table, generating insightful reports on incident occurrences.
@@ -45,5 +43,4 @@ For effective management and analysis of incident data, the application relies o
 #### Assumptions
 1. **Assumption about Column Order:** The code assumes a specific order for the columns based on their x-coordinates. As I fetch the data using the co-ordinates of blocks.
 2. **Assumption about Grouping:** The code assumes that data with the same group number should be grouped together.
-3. **Assumption about Text Content:** The code checks for specific text ("NORMAN POLICE DEPARTMENT" and "Daily Incident Summary") to filter out unwanted data. Ensure that these keywords are present consistently in the expected places.
 

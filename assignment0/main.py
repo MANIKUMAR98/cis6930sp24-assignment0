@@ -97,27 +97,6 @@ def add_data(incident, data):
         incident[4] = incident[4] + " " + text if incident[4] else text
 
 
-# def extract_incidents_using_layout_mode(path):
-#     reader = PdfReader(path)
-#     pages = reader.pages
-#     incidents = []
-#     for page in pages:
-#         data = page.extract_text(extraction_mode="layout")
-#         for line in data.splitlines():
-#             line = line.strip()
-#             if line and line.find("Incident Number") == -1 and line.find("NORMAN POLICE DEPARTMENT") == -1 and line.find("Daily Incident Summary") == -1:
-#                 res = re.split(r'\s{3,}', line)
-#                 if len(res) == 1 and len(incidents) > 0 and res[0].isupper():
-#                     last_tuple = incidents[-1]
-#                     new_list = list(last_tuple)
-#                     new_list[2] = new_list[2] + " " + res[0]
-#                     incidents.pop()
-#                     incidents.append(tuple(new_list))
-#                 if len(res) == 5:
-#                     incidents.append(tuple(res))
-#     return incidents
-
-
 def createdb():
     try:
         resources_dir = 'resources'
