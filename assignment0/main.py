@@ -5,6 +5,7 @@ import sqlite3
 import os
 import ssl
 import fitz
+import re
 
 first_column = 52.560001373291016
 second_column = 150.86000061035156
@@ -70,13 +71,15 @@ def extractincidents(path):
                     add_data(incident, data)
                 else:
                     text = incident[2]
-                    if text.find("NORMAN POLICE DEPARTMENT") == -1 and text.find("Daily Incident Summary") == -1:
+                    if text.find("NORMAN POLICE DEPARTMENT") == -1 and text.find("Daily Incident Summary") == -1 and incident[0].find("Date / Time") == -1:
                         incidents.append(tuple(incident))
                     incident = [''] * 5
                     add_data(incident, data)
                     group_number = current_number
-        if len(incidents) > 0:
-            incidents.pop(0)
+
+        date_pattern = re.compile(r'\b\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{2}\b')
+        if not date_pattern.search(incident[2]):
+            incidents.append(incident)
         return incidents
     except Exception as e:
         print(f"An error occurred while parsing PDF: {e}")
